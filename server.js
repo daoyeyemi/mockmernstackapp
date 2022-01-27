@@ -5,12 +5,12 @@ const morgan = require('morgan');
 const path = require('path');
 
 const app = express();
-const PORT = 8080; // Step 1
+const PORT = process.env.PORT || 8080; // Step 1
 
 const routes = require('./routes/api');
 
 // Step 2
-mongoose.connect('mongodb+srv://oyeda:oyeda@cluster0.nfskq.mongodb.net/mockmern', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://oyeda:oyeda@cluster0.nfskq.mongodb.net/mockmern', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -24,8 +24,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Step 3
-
-app.use(express.static('client/build'));
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('client/build'));
+}
 
 
 // HTTP request logger
